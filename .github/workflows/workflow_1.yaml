@@ -1,0 +1,45 @@
+name: VM Logging Pipeline
+
+on: push
+
+jobs:
+  job1_log_and_upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7.0.0
+
+      - name: Log VM1 Details
+        run: |
+          chmod +x script.sh
+          ./script.sh
+
+      - name: Upload Script and Log of VM1
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: VM1-files
+          path: |
+            script.sh
+            activity.log
+
+  job2_download_and_append:
+    runs-on: ubuntu-latest
+    needs: job1_log_and_upload
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: VM1-files
+
+      - name: Append VM2 Details
+        run: |
+          chmod +x script.sh
+          ./script.sh
+
+      - name: Upload Final Artifact
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: VM1-VM2-files
+          path: |
+            script.sh
+            activity.log
