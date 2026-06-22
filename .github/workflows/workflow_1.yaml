@@ -1,6 +1,7 @@
 name: VM Logging Pipeline
 
-on: push
+on: 
+  workflow_dispatch:
 
 jobs:
   job1_log_and_upload:
